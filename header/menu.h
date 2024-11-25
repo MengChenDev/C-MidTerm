@@ -4,23 +4,15 @@
 #ifndef MENU_H
 #define MENU_H
 #define MAX_MENU_ITEMS 24
+#define MAX_NAME_LENGTH 50
 
-typedef struct
-{
-  char name[50];
-  float price;
-} MenuItem;
-
-typedef struct
-{
-  int id;
-  int count;
-} OrderItem;
+int orderCounts[MAX_MENU_ITEMS];
 
 void Menu();
 void showMenu();
 void showOrder();
-void addOrder(int id);
+int getCount();
+void setOrder(int id, int count);
 int getChoice();
 void route(int choice);
 

@@ -1,13 +1,15 @@
-#include "../header/checkout.h"
 
-double getTotalPrice(MenuItem menuItems[], OrderItem orderList[])
+#include "../header/checkout.h"
+#include <stdio.h>
+
+double getTotalPrice(double menuPrices[], int orderCounts[])
 {
   double totalPrice = 0.0;
   for (int i = 0; i < MAX_MENU_ITEMS; i++)
   {
-    if (orderList[i].count > 0)
+    if (orderCounts[i] > 0)
     {
-      totalPrice += menuItems[i].price * orderList[i].count;
+      totalPrice += menuPrices[i] * orderCounts[i];
     }
   }
   return totalPrice;
@@ -17,6 +19,7 @@ void checkout(double totalPrice)
 {
   double actualPayment;
   double change;
+  int result;
   printf("--------------------------------------\n");
   printf("应付款: %6.2f元\n", totalPrice);
 
@@ -24,20 +27,22 @@ void checkout(double totalPrice)
   do
   {
     printf("请输入实付款金额 >>");
-    scanf("%lf", &actualPayment);
+    result = scanf("%lf", &actualPayment);
+    if (result == 0)
+    {
+      printf("输入无效，请输入一个数字。\n");
+      while (getchar() != '\n'); // 清空输入缓冲区
+      continue;
+    }
     if (actualPayment < MIN_PAYMENT)
     {
       printf("付款金额不能为负，请重新输入。\n");
-    }
-    else if (actualPayment > MAX_PAYMENT)
-    {
-      printf("付款金额超出最大限制，请重新输入。\n");
     }
     else if (actualPayment < totalPrice)
     {
       printf("付款不足，还需支付 %6.2f元。\n", totalPrice - actualPayment);
     }
-  } while (actualPayment < totalPrice || actualPayment < MIN_PAYMENT || actualPayment > MAX_PAYMENT);
+  } while (result == 0 || actualPayment < totalPrice || actualPayment < MIN_PAYMENT);
 
   // 计算找零
   change = actualPayment - totalPrice;
